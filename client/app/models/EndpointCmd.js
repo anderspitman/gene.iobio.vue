@@ -39,20 +39,10 @@ export default class EndpointCmd {
   }
 
   getVcfDepth(vcfUrl, tbiUrl) {
-    var me = this;
-    var args = ['-i'];
-    if (tbiUrl) {
-      args.push('"'+tbiUrl+'"');
-    } else {
-      args.push('"'+vcfUrl + '.tbi'+'"');
+    if (!tbiUrl) {
+      tbiUrl = vcfUrl + '.tbi';
     }
-
-    var cmd = new iobio.cmd(
-        me.IOBIO.vcfReadDepther,
-        args,
-        {ssl: me.globalApp.useSSL}
-    );
-    return cmd;
+    return this.api.vcfReadDepth(tbiUrl);
   }
 
   annotateVariants(vcfSource, refName, regions, vcfSampleNames, annotationEngine, isRefSeq, hgvsNotation, getRsId, vepAF, useServerCache, serverCacheKey, sfariMode = false) {
