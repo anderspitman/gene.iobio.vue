@@ -352,28 +352,51 @@ export default class EndpointCmd {
 
 
   getGeneCoverage(bamSources, refName, geneName, regionStart, regionEnd, regions) {
-    var me = this;
-    var bamCmds = me._getBamRegions(bamSources, refName, regionStart, regionEnd);
 
-    var args = [];
+    console.log("bamSources", bamSources);
+    const url = bamSources[0].bamUrl;
+    const indexUrl = bamSources[0].baiUrl;
 
-    bamCmds.forEach( function(bamCmd) {
-      args.push("-b");
-      args.push(bamCmd);
-    });
-
-    var regionStr = "#" + geneName + "\n";
-    regions.forEach(function(region) {
-      regionStr += refName + ":" + region.start + "-" + region.end + "\n";
-    })
-    var regionFile = new Blob([regionStr])
-
-    args.push("-r");
-    args.push(regionFile);
+    const ncmd = this.api.geneCoverage(url, indexUrl, refName, geneName, regionStart, regionEnd, regions);
+    return ncmd;
+    //ncmd.on('data', (data) => {
+    //  console.log("data");
+    //  console.log(data);
+    //});
+    //ncmd.on('end', () => {
+    //});
+    //ncmd.run();
 
 
-    var cmd = new iobio.cmd(me.IOBIO.geneCoverage, args, {ssl: me.globalApp.useSSL});
-    return cmd;
+    //var me = this;
+    //var bamCmds = me._getBamRegions(bamSources, refName, regionStart, regionEnd);
+
+    //var args = [];
+
+    //bamCmds.forEach( function(bamCmd) {
+    //  args.push("-b");
+    //  args.push(bamCmd);
+    //});
+
+    //var regionStr = "#" + geneName + "\n";
+    //regions.forEach(function(region) {
+    //  regionStr += refName + ":" + region.start + "-" + region.end + "\n";
+    //})
+    //console.log("regionStr", regionStr);
+    //console.log("regions", regions);
+
+    //var regionFile = new Blob([regionStr])
+
+    //args.push("-r");
+    //args.push(regionFile);
+
+
+    //var cmd = new iobio.cmd(me.IOBIO.geneCoverage, args, {ssl: me.globalApp.useSSL});
+    ////cmd.on('data', (data) => {
+    ////  console.log("working one");
+    ////  console.log(data);
+    ////});
+    //return cmd;
 
 
   }
