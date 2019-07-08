@@ -10,8 +10,8 @@ export default class EndpointCmd {
     this.genomeBuildHelper = genomeBuildHelper;
     this.getHumanRefNames  = getHumanRefNamesFunc;
     this.launchedFromUtah =  this.globalApp.IOBIO_SERVICES.indexOf('mosaic.chpc.utah.edu') == 0;
-    this.api = new Api('backend.iobio.io', { secure: true });
-    //this.api = new Api('localhost:9001', { secure: false });
+    //this.api = new Api('backend.iobio.io', { secure: true });
+    this.api = new Api('localhost:9001', { secure: false });
 
     // iobio services
     this.IOBIO = {};
@@ -163,35 +163,37 @@ export default class EndpointCmd {
   }
 
   normalizeVariants(vcfUrl, tbiUrl, refName, regions) {
+
     var me = this;
 
     var refFastaFile = me.genomeBuildHelper.getFastaPath(refName);
 
-    var regionParm = "";
-    regions.forEach(function(region) {
-      if (regionParm.length > 0) {
-        regionParm += " ";
-      }
-      regionParm += region.refName + ":" + region.start + "-" + region.end;
-    })
+    //var regionParm = "";
+    //regions.forEach(function(region) {
+    //  if (regionParm.length > 0) {
+    //    regionParm += " ";
+    //  }
+    //  regionParm += region.refName + ":" + region.start + "-" + region.end;
+    //})
 
-    var args = ['-h', vcfUrl, regionParm];
-    if (tbiUrl) {
-      args.push(tbiUrl);
-    }
+    //var args = ['-h', vcfUrl, regionParm];
+    //if (tbiUrl) {
+    //  args.push(tbiUrl);
+    //}
 
     var contigStr = "";
     me.getHumanRefNames(refName).split(" ").forEach(function(ref) {
         contigStr += "##contig=<ID=" + ref + ">\n";
     })
-    var contigNameFile = new Blob([contigStr])
+    //var contigNameFile = new Blob([contigStr])
 
-    var cmd = new iobio.cmd(me.IOBIO.tabix, args, {ssl: me.globalApp.useSSL})
-                       .pipe(me.IOBIO.bcftools, ['annotate', '-h', contigNameFile, '-'], {ssl: me.globalApp.useSSL})
+    //var cmd = new iobio.cmd(me.IOBIO.tabix, args, {ssl: me.globalApp.useSSL})
+    //                   .pipe(me.IOBIO.bcftools, ['annotate', '-h', contigNameFile, '-'], {ssl: me.globalApp.useSSL})
 
     // normalize variants
-    cmd = cmd.pipe(me.IOBIO.vt, ["normalize", "-n", "-r", refFastaFile, '-'], {ssl: me.globalApp.useSSL})
+    //cmd = cmd.pipe(me.IOBIO.vt, ["normalize", "-n", "-r", refFastaFile, '-'], {ssl: me.globalApp.useSSL})
 
+    const cmd = this.api.normalizeVariants(vcfUrl, tbiUrl, refName, regions, contigStr, refFastaFile);
     return cmd;
   }
 
@@ -353,7 +355,6 @@ export default class EndpointCmd {
 
   getGeneCoverage(bamSources, refName, geneName, regionStart, regionEnd, regions) {
 
-    console.log("bamSources", bamSources);
     const url = bamSources[0].bamUrl;
     const indexUrl = bamSources[0].baiUrl;
 
