@@ -1,5 +1,5 @@
 //import iobiocmd from '../third-party/iobio.js'
-import { Api } from 'iobio-client';
+import { Api } from 'iobio-api-client';
 
 
 export default class EndpointCmd {
