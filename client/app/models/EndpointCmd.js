@@ -1,5 +1,5 @@
 //import iobiocmd from '../third-party/iobio.js'
-import { Api } from 'iobio-api-client';
+import { Client } from 'iobio-api-client';
 
 
 export default class EndpointCmd {
@@ -10,7 +10,7 @@ export default class EndpointCmd {
     this.genomeBuildHelper = genomeBuildHelper;
     this.getHumanRefNames  = getHumanRefNamesFunc;
     this.launchedFromUtah =  this.globalApp.IOBIO_SERVICES.indexOf('mosaic.chpc.utah.edu') == 0;
-    this.api = new Api('backend.iobio.io', { secure: true });
+    this.api = new Client('backend.iobio.io', { secure: true });
     //this.api = new Api('localhost:9001', { secure: false });
 
     // iobio services
