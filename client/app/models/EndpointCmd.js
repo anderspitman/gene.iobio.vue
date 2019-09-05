@@ -112,7 +112,6 @@ export default class EndpointCmd {
         sfariMode,
 
         vepREVELFile: this.globalApp.vepREVELFile,
-        //globalGetRsId: me.globalApp.utility.getRsId,
 
         gnomadUrl: gnomadUrl ? gnomadUrl : '',
         gnomadRegionStr: gnomadRegionStr ? gnomadRegionStr : '',
